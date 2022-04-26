@@ -1,2 +1,3 @@
 # Inception
- Проект Школы 21. System administration by using Docker
+  
+Цель проекта - создать Docker инфраструктуру, где каждый сервис (NGINX, Wordpress и MariaDB) запускаются на отдельных контейнерах и соединяются через docker-network. Все данные и изменения во время работы Wordpress сохраняются между запусками контейнеров путем создания Docker volume.
