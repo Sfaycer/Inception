@@ -1,0 +1,68 @@
+version: "3.9"
+services:
+  nginx:
+    container_name: con_nginx
+    build: 
+      context: ./requirements/nginx
+      args: 
+      - CERT=${CERT}
+      - CERT_KEY=${CERT_KEY}
+    image: nginx
+    env_file:
+    - .env
+    ports:
+    - 443:443
+    volumes: 
+    - wordpress_data:/var/www/html
+    restart: always
+    depends_on:
+    - wordpress
+    networks: 
+    - allnetwork
+
+  db:
+    container_name: con_db
+    build: ./requirements/mariadb
+    image: db
+    env_file:
+    - .env
+    volumes:
+    - db_data:/var/lib/mysql
+    restart: always
+    networks:
+    - allnetwork
+    
+  wordpress:
+    container_name: con_wordpress
+    build: ./requirements/wordpress
+    image: wordpress
+    env_file:
+    - .env
+    restart: always
+    depends_on:
+    - db
+    volumes: 
+    - wordpress_data:/var/www/html
+    networks:
+    - allnetwork
+
+volumes: 
+  wordpress_data:
+    name: wordpress_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/dkarisa/data/wordpress_data
+  db_data:
+    name: db_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/dkarisa/data/db_data
+
+networks:
+  allnetwork:
+    name: allnetwork
+    driver: bridge
